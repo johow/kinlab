@@ -1,0 +1,8 @@
+name: PedigreeShiny
+account: johow
+server: shinyapps.io
+bundleId: 213787
+url: https://johow.shinyapps.io/PedigreeShiny
+when: 1435708590.98609
+asMultiple: FALSE
+asStatic: FALSE

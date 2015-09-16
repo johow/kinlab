@@ -1,0 +1,9 @@
+.Rproj.user
+.Rhistory
+.RData
+.Rbuildignore
+.Rproj.user
+inst/doc
+data/kh.rdata
+data/qb.rdata
+vignettes/rsconnect
