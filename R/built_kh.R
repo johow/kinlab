@@ -270,7 +270,7 @@ if (kinset) {
   )
 } else load(file.path(local_path, "kh_kin.RData"))} else kh_kin <- NULL
 
-if (n_sample<length(kh_ped)==TRUE){
+if (n_sample<length(kh_ped)){
 out <- restrict2sample(df_evn=kh_evn,
                        df_ind =kh_ind,
                        list_kin =kh_kin,
