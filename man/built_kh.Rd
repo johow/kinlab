@@ -6,7 +6,7 @@
 \usage{
 built_kh(source_path = NULL, local_path = getwd(), file1 = "kindermc.sav",
   file2 = "familienmc.sav", silent = FALSE, n_sample = 10,
-  force_new = FALSE, keep_files = NULL, set_seed = NULL)
+  force_new = FALSE, keep_files = NULL, set_seed = NULL, kinset = FALSE)
 }
 \arguments{
 \item{source_path}{Character string for the file path from which SPSS source(s) (e.g. `file1`) will be read.}
@@ -26,6 +26,8 @@ built_kh(source_path = NULL, local_path = getwd(), file1 = "kindermc.sav",
 \item{keep_files}{List specific files being kept in 'local_path' in case of `force_new=TRUE`.}
 
 \item{set_seed}{Optional random seed being to allow reproducibility? Default is null, no seed is set.}
+
+\item{kinset}{Should kin networks be computed?}
 }
 \description{
 This function prepares SPSS data provided by the 'Krummhörn Family Reconstitution'

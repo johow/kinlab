@@ -11,6 +11,7 @@
 #' @param force_new Should existing files be replaced? Default is FALSE
 #' @param keep_files List specific files being kept in 'local_path' in case of `force_new=TRUE`.
 #' @param set_seed Optional random seed being to allow reproducibility? Default is null, no seed is set.
+#' @param kinset Should kin networks be computed?
 #' @keywords pedigree
 #' @export
 #' @examples
@@ -25,7 +26,8 @@ built_kh <- function(source_path = NULL, local_path = getwd(),
                      n_sample = 10,
                      force_new=FALSE,
                      keep_files = NULL,
-                     set_seed = NULL){
+                     set_seed = NULL, 
+                     kinset = FALSE){
   if (!is.null(set_seed)){set.seed(set_seed)}
 t_start <- Sys.time()
 if(force_new==FALSE){my_files <- list.files(local_path)} else {my_files <- paste(keep_files)}
@@ -65,9 +67,9 @@ if (!"kh_src.RData" %in% my_files){
     kh_src <- list(kh_src1, kh_src2)
 #     message("     ", format(Sys.time(), "%X"), " | Now writing \"", local_path, "/kh_src.RData\"")
 #     save(kh_src,
-#          file = paste(local_path, "kh_src.RData", sep = "/")
+#          file = file.path(local_path, "kh_src.RData")
 #          )
-} else load(paste(local_path, "kh_src.RData", sep = "/"))
+} else load(file.path(local_path, "kh_src.RData"))
 
 kh_src1 <- kh_src[[1]]
 kh_src2 <- kh_src[[2]]
@@ -89,13 +91,13 @@ if (!"kh_ind.RData" %in% my_files){
   table(kh_ind$famid)[1:10]
   table(kh_ind$famid==1)
   round(table(kh_ind$famid==1)/sum(table(kh_ind$famid==1)),2)
-  # EXCLUDE INDIVIDUALS OUTSIDE THE LARGEST PEDIGREE
-  kh_ind <- kh_ind[kh_ind$famid==1,]
+  # EXCLUDE INDIVIDUALS OUTSIDE THE LARGEST PEDIGREE?
+#   kh_ind <- kh_ind[kh_ind$famid==1,]
 #   message("     ", format(Sys.time(), "%X"), " | Now writing \"", local_path, "/kh_ind.RData\"")
 #   save(kh_ind,
-#        file = paste(local_path, "kh_ind.RData", sep = "/")
+#        file = file.path(local_path, "kh_ind.RData")
 #   )
-  } else load(paste(local_path, "kh_ind.RData", sep = "/"))
+  } else load(file.path(local_path, "kh_ind.RData"))
 
 ###########################################################
 #
@@ -114,9 +116,9 @@ if (!"kh_twn.RData" %in% my_files){
   knitr::kable(kh_twn[1:10,])
 #   message("     ", format(Sys.time(), "%X"), " | Now writing \"", local_path, "/kh_twn.RData\"")
 #   save(kh_twn,
-#        file = paste(local_path, "kh_twn.RData", sep = "/")
+#        file = file.path(local_path, "kh_twn.RData")
 #   )
-  } else load(paste(local_path, "kh_twn.RData", sep = "/"))
+  } else load(file.path(local_path, "kh_twn.RData"))
 
 ###########################################################
 #
@@ -131,9 +133,9 @@ if (!"kh_evn.RData" %in% my_files){
   kh_evn$evloc <- recode_evloc(kh_evn$evloc)
 #   message("     ", format(Sys.time(), "%X"), " | Now writing \"", local_path, "/kh_evn.RData\"")
 #   save(kh_evn,
-#        file = paste(local_path, "kh_evn.RData", sep = "/")
+#        file = file.path(local_path, "kh_evn.RData")
 #   )
-  } else load(paste(local_path, "kh_evn.RData", sep = "/"))
+  } else load(file.path(local_path, "kh_evn.RData"))
 
 ###########################################################
 #
@@ -153,12 +155,13 @@ if (!"kh_evn.RData" %in% my_files){
 ###########################################################
 
 if (!"kh_mat.RData" %in% my_files){
+  if(!"status" %in% names(kh_evn)){kh_evn$status <- 1}
   kh_mat <- get_evmat_list(kh_evn)
 #   message("     ", format(Sys.time(), "%X"), " | Now writing \"", local_path, "/kh_mat.RData\"")
 #   save(kh_mat,
-#        file = paste(local_path, "kh_mat.RData", sep = "/")
+#        file = file.path(local_path, "kh_mat.RData")
 #        )
-} else load(paste(local_path, "kh_mat.RData", sep = "/"))
+} else load(file.path(local_path, "kh_mat.RData"))
 
 
 ###########################################################
@@ -194,9 +197,9 @@ if (!"kh_ped.RData" %in% my_files){
   names(kh_ped) <- kh_mom
   message("     ", format(Sys.time(), "%X"), " | Now writing \"", local_path, "/kh_ped.RData\"")
   save(kh_ped,
-       file=paste(local_path, "kh_ped.RData", sep="/")
+       file=file.path(local_path, "kh_ped.RData")
        )
-} else load(paste(local_path, "kh_ped.RData", sep = "/"))
+} else load(file.path(local_path, "kh_ped.RData"))
 
 message("     kh_ped, a list of ", length(kh_ped), " pedigrees")
 
@@ -214,9 +217,9 @@ if (!"kh_geo.RData" %in% my_files){
   kh_geo <- get_geo()
   message("     ", format(Sys.time(), "%X"), " | Now writing \"", local_path, "/kh_geo.RData\"")
   save(kh_geo,
-       file=paste(local_path, "kh_geo.RData", sep="/")
+       file=file.path(local_path, "kh_geo.RData")
        )
-} else load(paste(local_path, "kh_geo.RData", sep = "/"))
+} else load(file.path(local_path, "kh_geo.RData"))
 
 ###########################################################
 #
@@ -226,7 +229,8 @@ if (!"kh_geo.RData" %in% my_files){
 #
 ###########################################################
 
-if (!"kh_kin.RData" %in% my_files){
+if (kinset) {
+  if (!"kh_kin.RData" %in% my_files){
   kh_kin <- vector("list", length(kh_ped))
   names(kh_kin) <- names(kh_ped)
   t_1 <- Sys.time()
@@ -251,7 +255,7 @@ if (!"kh_kin.RData" %in% my_files){
         try(kinlab::get_kinset(my_id, my_date,
                                kh_ped[[paste(my_id)]],
                                kh_ind, kh_src2, kh_mat[[1]],
-                               kh_geo[["dist"]]
+                               kh_geo[["mat"]]
                                )
         )
       }
@@ -262,12 +266,11 @@ if (!"kh_kin.RData" %in% my_files){
   }
   message("     ", format(Sys.time(), "%X"), " | Now writing \"", local_path, "/kh_kin.RData\"")
   save(kh_kin,
-       file=paste(local_path, "kh_kin.RData", sep="/")
+       file=file.path(local_path, "kh_kin.RData")
   )
-} else load(paste(local_path, "kh_kin.RData", sep = "/"))
-n_sample <- length(kh_kin)
-message("## number of cases: ", n_sample)
+} else load(file.path(local_path, "kh_kin.RData"))} else kh_kin <- NULL
 
+if (n_sample<length(kh_ped)==TRUE){
 out <- restrict2sample(df_evn=kh_evn,
                        df_ind =kh_ind,
                        list_kin =kh_kin,
@@ -275,46 +278,53 @@ out <- restrict2sample(df_evn=kh_evn,
                        list_src =kh_src,
                        df_twn =kh_twn,
                        param = kh_mat[[2]])
+} else {
+  out <- list(evn = kh_evn, 
+              src = list(kh_src1, kh_src1), 
+              mat = kh_mat[[1]], 
+              ind = kh_ind, 
+              twn = kh_twn, 
+              param = kh_mat[[2]])
+}
 
-
-if(file.exists(paste(local_path, "kh_mat.RData", sep = "/"))){file.remove(paste(local_path, "kh_mat.RData", sep = "/"))}
+if(file.exists(file.path(local_path, "kh_mat.RData"))){file.remove(file.path(local_path, "kh_mat.RData"))}
 
 
 if (!"kh_evn.RData" %in% my_files){
 kh_evn <- out[["evn"]]
-save(kh_evn, file = paste(local_path, "kh_evn.RData", sep="/"))
+save(kh_evn, file = file.path(local_path, "kh_evn.RData"))
 message(paste0(format(Sys.time(), "%X"), " ...wrote \"", local_path, "/kh_evn.RData\""))
 }
 
 if (!"kh_mat.RData" %in% my_files){
 kh_mat <- out[["mat"]]
-save(kh_mat, file = paste(local_path, "kh_mat.RData", sep="/"))
+save(kh_mat, file = file.path(local_path, "kh_mat.RData"))
 message(paste0(format(Sys.time(), "%X"), " ...wrote \"", local_path, "/kh_mat.RData\""))
 }
 
 if (!"kh_ind.RData" %in% my_files){
 kh_ind <- out[["ind"]]
-save(kh_ind, file = paste(local_path, "kh_ind.RData", sep="/"))
+save(kh_ind, file = file.path(local_path, "kh_ind.RData"))
 message(paste0(format(Sys.time(), "%X"), " ...wrote \"", local_path, "/kh_ind.RData\""))
 }
 
 if (!"kh_src.RData" %in% my_files){
 kh_src <- out[["src"]]
-save(kh_src, file = paste(local_path, "kh_src.RData", sep="/"))
+save(kh_src, file = file.path(local_path, "kh_src.RData"))
 message(paste0(format(Sys.time(), "%X"), " ...wrote \"", local_path, "/kh_src.RData\""))
 }
 
 if (!"kh_twn.RData" %in% my_files){
 kh_twn <- out[["twn"]]
-save(kh_twn, file = paste(local_path, "kh_twn.RData", sep="/"))
+save(kh_twn, file = file.path(local_path, "kh_twn.RData"))
 message(paste0(format(Sys.time(), "%X"), " ...wrote \"", local_path, "/kh_twn.RData\""))
 }
 
 if (!"kh_par.RData" %in% my_files){
 kh_par <- out[["param"]]
-save(kh_par, file = paste(local_path, "kh_par.RData", sep="/"))
+save(kh_par, file = file.path(local_path, "kh_par.RData"))
 message(paste0(format(Sys.time(), "%X"), " ...wrote \"", local_path, "/kh_par.RData\""))
 }
-} else message("no action required!")
+} else message("no action required!")<
 kinlab::run_time(t_start)
 }
