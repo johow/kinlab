@@ -8,7 +8,7 @@
 #' @param evmat Event matrix
 #' @param label optional vector of labels to add to pedigree members
 #' @param cex size of text and symbols
-#' @chrtype Chromosme type for relatedness calculation (either 'autosome' or 'X')
+#' @param chrtype Chromosme type for relatedness calculation (either 'autosome' or 'X')
 #' @keywords kh spouse
 #' @export
 #' @examples

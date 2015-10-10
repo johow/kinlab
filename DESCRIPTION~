@@ -1,0 +1,22 @@
+Package: kinlab
+Title: Kinship and Reproduction in Historical Populations
+Version: 0.0.0.9000
+Author: Johannes Johow
+Maintainer: Johannes Johannes <johannes.johow@gmx.de>
+Authors@R: person("Johannes", "Johow", ,"johannes.johow@gmx.de", role = c("aut", "cre"))
+Description: Functionality for analyzing kin effects on individual life histories and reproductive outcomes using historical family data. For further informations see package citation and vignettes.
+Depends: R (>= 3.2.0)
+Encoding: UTF-8
+License: GPL (>= 3)
+LazyData: true
+Imports: kinship2,
+    ggplot2,
+    survival,
+    mstate,
+    pedigree,
+    scales,
+    data.table,
+    haven
+Suggests: testthat,
+    knitr
+VignetteBuilder: knitr

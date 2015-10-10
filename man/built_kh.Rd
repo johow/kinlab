@@ -2,38 +2,39 @@
 % Please edit documentation in R/built_kh.R
 \name{built_kh}
 \alias{built_kh}
-\title{Prepare data for pedigrees}
+\title{Built Krummhörn data files}
 \usage{
-built_kh(kindermc = "/home/johow/Desktop/KH33_Final/kindermc.sav",
-  familienmc = "/home/johow/Desktop/KH33_Final/familienmc.sav",
-  geo = "/home/johow/Dropbox/variance/data/kh-geo.Rdata")
+built_kh(source_path = NULL, local_path = getwd(), file1 = "kindermc.sav",
+  file2 = "familienmc.sav", silent = FALSE, n_sample = 10,
+  force_new = FALSE, keep_files = NULL, set_seed = NULL)
 }
 \arguments{
-\item{kindermc}{File path to  the 'kindermc.sav' file (SPSS).}
+\item{source_path}{Character string for the file path from which SPSS source(s) (e.g. `file1`) will be read.}
 
-\item{familienmc}{File path to  the 'familienmc.sav' file  (SPSS).}
+\item{local_path}{Character string for a file path to which 'kinlab' writes produced `.RData` files.}
 
-\item{geo}{File path to  the 'kh-geo.Rdata' file (R).}
+\item{file1}{Character string for the mame of the first source file in SPSS format  (i.e. `.sav`).}
+
+\item{file2}{An optional character string for the mame of the second source file in SPSS format  (i.e. `.sav`).}
+
+\item{silent}{If TRUE, a final message giving the runtime of this function is omitted. (Default is FALSE)}
+
+\item{n_sample}{Number of random draws, if n_sample < number of observations. (Default is 100)}
+
+\item{force_new}{Should existing files be replaced? Default is FALSE}
+
+\item{keep_files}{List specific files being kept in 'local_path' in case of `force_new=TRUE`.}
+
+\item{set_seed}{Optional random seed being to allow reproducibility? Default is null, no seed is set.}
 }
 \description{
-This function returns a list of 10 elements:
-\enumerate{
-  \item{df_kinder}{A dataframe with 80489 rows and 58 columns}
-  \item{df_fam}{A dataframe with 34711 rows and 178 columns}
- \item{df_ped}{TBD}
- \item{relate}{TBD}
- \item{evmat}{TBD}
- \item{df_ev}{TBD}
- \item{evmat_bak}{TBD}
- \item{geo}{TBD}
- \item{evloc_list}{TBD}
- \item{evspc_list}{TBD}
-}
+This function prepares SPSS data provided by the 'Krummhörn Family Reconstitution'
+carried out by Voland et al. (e.g. Voland 2015) for being used with 'kinlab'.
 }
 \examples{
-twinmat <- get_twinmat()
-str(twinmat)
+\dontrun{
+grap_ped(1067, df_ped)
 }
-\keyword{import}
-\keyword{kh}
+}
+\keyword{pedigree}
 

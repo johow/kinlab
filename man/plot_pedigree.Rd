@@ -4,22 +4,25 @@
 \alias{plot_pedigree}
 \title{Plot a pedigree for a given individual at a given date}
 \usage{
-plot_pedigree(x, evdat, df_ind, ped = NULL, evmat, id = NULL, cex = 0.6)
+plot_pedigree(id, evdat, df_ind, ped = NULL, evmat, label = NULL,
+  cex = 0.6, chrtype = "autosome")
 }
 \arguments{
-\item{x}{Individual ID}
+\item{id}{Individual ID}
 
 \item{evdat}{Dates of interest in the Year-month-day format (e.g. "1850-01-01")}
 
 \item{df_ind}{A dataframe}
 
-\item{ped}{An optional pedgree object related to x. Will be generated, if not provided.}
+\item{ped}{An optional pedgree object related to id. Will be generated, if not provided.}
 
 \item{evmat}{Event matrix}
 
-\item{id}{optional vector of labels to add to pedigree members}
+\item{label}{optional vector of labels to add to pedigree members}
 
 \item{cex}{size of text and symbols}
+
+\item{chrtype}{Chromosme type for relatedness calculation (either 'autosome' or 'X')}
 }
 \description{
 This function plots a pedigree showing colored by relatedness and survival status with labels indivating age and locations of living pedigree members.
