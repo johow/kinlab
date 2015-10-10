@@ -45,5 +45,6 @@ get_dt_ev <- function(df_ind=NULL, df_fam=NULL){
   df_ev$evspc <- factor(df_ev$evspc)
   df_ev <- subset(df_ev, !(evtyp == "+" & evspc == "E"))
   df_ev <- df_ev[order(df_ev$id, df_ev$evdat),]
+  df_ev$status <- 1
   return(df_ev)
 }
