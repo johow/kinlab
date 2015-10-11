@@ -11,6 +11,8 @@
 #' }
 get_brank <- function(x, df_ind = kh.full::kh_ind){
   df_ind <- df_ind[df_ind$momid == get_moms(x, df_ind) & !is.na(df_ind$bdate) & df_ind$momid > 0,]
-  stopifnot(x %in% df_ind$id)
-   return(which(unique(df_ind$bdate == df_ind$bdate[df_ind$id == x])))
-}
+  if(x %in% df_ind$id){
+ y<-which(unique(df_ind$bdate == df_ind$bdate[df_ind$id == x]))
+} else y = NA
+return(y)
+    }
