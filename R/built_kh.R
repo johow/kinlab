@@ -184,7 +184,7 @@ if (!"kh_ped.RData" %in% my_files){
   set.seed(13)
   kh_mom <- kinlab::sample_kh(kh_ind, kh_src2, n = n_sample)
 
-  message("     Start scaling of ", n_sample, " pedigrees at ", format(Sys.time(), "%X..."))
+  message("     Start scaling of ", ifelse(n_sample>length(kh_mom),length(kh_mom), n_sample), " pedigrees at ", format(Sys.time(), "%X..."))
   if(silent==FALSE){ kh_ped <- plyr::llply(
     kh_mom, kinlab::grap_ped, kh_ind, kh_twn,
     as.numeric(dimnames(kh_mat[[1]])$id), .progress="text"

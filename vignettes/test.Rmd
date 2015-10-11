@@ -1,0 +1,84 @@
+---
+title: "Warum Familie wichtig ist"
+subtitle: "Modellierung kurz- und langfristiger Einflüsse von Verwandten auf Lebens- und Reproduktionsstrategien"
+author: "JJ"
+date: "22 September 2015"
+output: html_document
+runtime: shiny
+---
+  
+Funktionsumfang des [`kinlab` package](http://www.github.com/johow/kinlab)  für  [R](http://cran.r-project.org), welches aus einem Forschungsprojekt mit obigem Titel (und einer Förderung durch die Deutsche Forschungsgemeinschaft in den Jahren 2012 bis 2015) hervorgegangen ist.  
+
+# Stammbaumstrukuren 
+
+```{r, echo=FALSE}
+library(shiny)
+library(survival)
+library(kinlab)
+shinyApp(
+  shinyUI(pageWithSidebar(
+    headerPanel("Test Shiny App"),
+    sidebarPanel(
+      selectInput("dependent", "Dependent Variable:", c("ibi", "matage")),
+      uiOutput("independent"),selectInput("var", "Select Predictor", c("male", "matage"),
+"male")
+    ),
+    
+    mainPanel(tableOutput("regTab"), 
+              textOutput("var_names"),
+              plotOutput("ibi_surv"))
+  )),
+  
+  shinyServer(function(input, output, session) {
+    
+    kh_ibi <- kh.full::kh_ind
+     kh_ibi <-subset( kh_ibi, !is.na(bdate)) 
+    kh_ibi <- kh_ibi[order(kh_ibi$momid, kh_ibi$bdate),]
+    evmat <- kh.full::kh_mat
+    
+    kh_ibi$maab <- NA
+    kh_ibi$maab[which(kh_ibi$momid > 0)]  <- 
+ifelse((as.numeric(kh_ibi$bdate[which(kh_ibi$momid > 0)]) - 
+    evmat[paste(kh_ibi$momid[which(kh_ibi$momid > 0)] ),1,1])/365.25 < 50 &
+      (as.numeric(kh_ibi$bdate[which(kh_ibi$momid > 0)]) - 
+    evmat[paste(kh_ibi$momid[which(kh_ibi$momid > 0)] ),1,1])/365.25 > 15,
+(as.numeric(kh_ibi$bdate[which(kh_ibi$momid > 0)]) - 
+    evmat[paste(kh_ibi$momid[which(kh_ibi$momid > 0)] ),1,1])/365.25, NA)
+
+    kh_ibi$ibi <- c(ifelse(ifelse(kh_ibi$momid[2:nrow(kh_ibi)]==kh_ibi$momid[1:(nrow(kh_ibi)-1)], as.numeric(kh_ibi$bdate[2:nrow(kh_ibi)] - kh_ibi$bdate[1:(nrow(kh_ibi)-1)])/365.25, NA) > 0.75 & ifelse(kh_ibi$momid[2:nrow(kh_ibi)]==kh_ibi$momid[1:(nrow(kh_ibi)-1)], as.numeric(kh_ibi$bdate[2:nrow(kh_ibi)] - kh_ibi$bdate[1:(nrow(kh_ibi)-1)])/365.25, NA) < 5, ifelse(kh_ibi$momid[2:nrow(kh_ibi)]==kh_ibi$momid[1:(nrow(kh_ibi)-1)], as.numeric(kh_ibi$bdate[2:nrow(kh_ibi)] - kh_ibi$bdate[1:(nrow(kh_ibi)-1)])/365.25, NA), NA), NA)
+     kh_ibi$male <- ifelse( kh_ibi$sex==1, 1, 0)
+     kh_ibi$one <- ifelse( is.na(kh_ibi$ibi), 0, 1)
+     kh_ibi$surv1 <- na2zero(ifelse( is.na(kh_ibi$ddate) | 
+                               as.numeric(kh_ibi$ddate-kh_ibi$bdate)>365, 1, 0))
+
+     kh_ibi <-subset( kh_ibi, surv1 == 1)
+    dat <- data.frame(momid = kh_ibi$momid, 
+                      bdate = kh_ibi$bdate, 
+                      ibi = kh_ibi$ibi,
+                      male = kh_ibi$male, 
+                      matage=kh_ibi$maab)
+  
+        dat$one <- 1    
+        output$ibi_surv <- renderPlot(plot(survfit(Surv(ibi, one) ~ input$var, kh_ibi), col = 1:2, conf.int=TRUE))
+    output$independent <- renderUI({
+      checkboxGroupInput("independent", "Independent Variables:", c("male", "matage", "pedsize", "rel", "xrel"))
+    })
+    
+  runRegression <- reactive({
+    coxph(as.formula(paste("Surv(dat$ibi, dat$one)"," ~ ", input$var)),data=dat)
+  })
+
+  output$regTab <- renderTable({
+    if(!is.null(input$independent)){
+      summary(runRegression())$coefficients
+    } else {
+      print(data.frame(Warning="Please select Model Parameters."))
+    }
+  })
+
+
+}
+)
+)
+
+  
