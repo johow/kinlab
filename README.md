@@ -3,8 +3,7 @@ An R package for analyzing genetic relatedness and reproductive outcomes in pedi
 Try this: 
 
 `library(devtools)`  
-`install_github("kinlab", "johow")`  
-`install_github("kh.data", "johow")`  
+`install_github(c("johow/kinlab","johow/kh.data"))`  
 `library(kinlab)`  
 `plot_pedigree(x=1570, evdat="1800-01-01",  df_ind=kh.data::kh_ind, ped=kh.data::kh_ped[["1570"]], evmat=kh.data::kh_mat)`  
 
