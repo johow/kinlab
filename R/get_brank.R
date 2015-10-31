@@ -9,10 +9,10 @@
 #' \dontrun{
 #' get_brank(12)
 #' }
-get_brank <- function(x, df_ind = kh.full::kh_ind){
-  df_ind <- df_ind[df_ind$momid == get_moms(x, df_ind) & !is.na(df_ind$bdate) & df_ind$momid > 0,]
-  if(x %in% df_ind$id){
- y<-which(unique(df_ind$bdate == df_ind$bdate[df_ind$id == x]))
-} else y = NA
-return(y)
-    }
+get_brank <- function(x=NULL,
+                      df_ind = kh.full::kh_ind[kh.full::kh_ind$momid>0 & !is.na(kh.full::kh_ind$bdate),]){
+df_ind <- df_ind[order(df_ind$momid, df_ind$bdate),]
+ return(as.integer(lapply(mapply("==", 
+tapply(df_ind$bdate, df_ind$momid, unique)[paste(get_moms(x, df_ind))],
+         df_ind$bdate[df_ind$id%in% x]),  which)[order(x)]))
+}

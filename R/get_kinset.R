@@ -30,5 +30,9 @@ get_kinset <- function(x, evdat, ped, df_ind, df_fam, evmat, map_dist){
   if (kinlab::actual_spouse(x, paste(evdat), df_ind, df_fam) %in% df_tmp$id){
    df_tmp$reldad <- as.numeric(kinship2::kinship(ped)[paste(kinlab::actual_spouse(x, paste(evdat), df_ind, df_fam)),paste(df_tmp$id)])
   } else df_tmp$reldad <- NA
+  df_tmp$relmomx <- as.numeric(kinship2::kinship(ped, chrtype="X")[paste(x),paste(df_tmp$id)])
+  if (kinlab::actual_spouse(x, paste(evdat), df_ind, df_fam) %in% df_tmp$id){
+    df_tmp$reldadx <- as.numeric(kinship2::kinship(ped, chrtype="X")[paste(kinlab::actual_spouse(x, paste(evdat), df_ind, df_fam)),paste(df_tmp$id)])
+  } else df_tmp$reldad <- NA
   return(df_tmp)
 }

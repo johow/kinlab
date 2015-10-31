@@ -4,7 +4,8 @@
 \alias{get_brank}
 \title{Individual birth rank}
 \usage{
-get_brank(x, df_ind = kh.full::kh_ind)
+get_brank(x = NULL, df_ind = kh.full::kh_ind[kh.full::kh_ind$momid > 0 &
+  !is.na(kh.full::kh_ind$bdate), ])
 }
 \arguments{
 \item{x}{ID of interest}
