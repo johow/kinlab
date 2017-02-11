@@ -28,6 +28,12 @@
 #   return(df_ped_tmp$spouse)
 # }
 get_spouses <- function(x, df_ped){
-  return(ifelse(x>0 & x %in% df_ped$momid, unique(df_ped$dadid[df_ped$momid%in%x]),
-                ifelse(x>0 & x %in% df_ped$dadid, unique(df_ped$momid[df_ped$dadid%in%x]), NA)))
+  outObj <- NA
+  if (x>0 & x %in% df_ped$momid){
+    outObj <- unique(df_ped$dadid[df_ped$momid%in%x])
+  }
+  if (x>0 & x %in% df_ped$dadid){
+    outObj <- unique(df_ped$momid[df_ped$dadid%in%x])
+}
+return(outObj)
 }
